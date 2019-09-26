@@ -1,0 +1,24 @@
+---
+kind: pipeline
+name: build
+
+steps:
+  - name: publish
+    image: wunderai/drone-kaniko
+    settings:
+      repo: wunderai/drone-az-kubectl-helm
+      tags:
+        - latest
+        - "${DRONE_BUILD_CREATED}-${DRONE_BRANCH}-${DRONE_BUILD_NUMBER}-${DRONE_COMMIT_SHA:0:8}"
+      build_args:
+        - "COMMIT_SHA=${DRONE_COMMIT_SHA}"
+        - "COMMIT_AUTHOR_EMAIL=${DRONE_COMMIT_AUTHOR_EMAIL}"
+      autotag: true
+      cache: false
+      debug: false
+      destination_prefix: ""
+      dockerfile: Dockerfile
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
